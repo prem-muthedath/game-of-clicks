@@ -46,7 +46,13 @@ extra-source-files:
     CHANGELOG.md
     cabal.project.freeze
     docs/problem-statement.txt
-    test/game-of-clicks-input.txt
+    tests/inputs/normal.txt
+    tests/inputs/zero-blocked.txt
+    tests/inputs/zero-viewables.txt
+    tests/inputs/same-high-low-blocked.txt
+    tests/inputs/same-high-low-viewable.txt
+    tests/inputs/high-low-blocked-with-looping.txt
+    tests/inputs/blocked-within.txt
 
 executable game-of-clicks
     -- .hs or .lhs file containing the Main module.

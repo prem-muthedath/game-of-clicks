@@ -4,14 +4,14 @@
 -- Game Of Clicks (R->Hard)
 -- thoughtworks interview problem
 -- https://prepinsta.com/thoughtworks-coding-questions/
--- see also ./problem-statement.txt
+-- see also ./docs/problem-statement.txt
 --
 -- Haskell Solution.
 -- author: Prem Muthedath, AUG 2023.
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-module GameOfClicks where
+module Main where
 
-import Control.Monad.Reader (Reader, runReader, ask, asks, forM)
+import Control.Monad.Reader (Reader, runReader, ask, asks, forM, foldM)
 import Data.List (lines, nub)
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -130,7 +130,7 @@ minimumClicks = do
     _   -> sum <$> allMinClicks
   where allMinClicks :: ClicksReader [Clicks]
         allMinClicks = do
-          initial <- clicksToGetStarted
+          first <- clicksToGetStarted
           input <- ask
           let vChannels = viewables input
               viewableTriples = zip3 (maxBound:vChannels) vChannels (tail vChannels)
@@ -140,36 +140,70 @@ minimumClicks = do
                     keyPressed :: Clicks = keyPressClicks to
                 upDown :: Clicks <- upDownClicks from to
                 return $ minimum [lastViewed, upDown, keyPressed]
-          return (initial:rest)
+          return (first:rest)
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- | Parse input data to create an `Input` record.
 -- See ./docs/problem-statement.txt to learn about input format.
 -- see ./test/game-of-clicks-input.txt for a sample input.
-parse :: [Int] -> Input
-parse xs
-  | length xs < 4 = error "Input Data Must Have At Least 4 Elements For Parsing."
-  | otherwise =
-    let lowest'     = head xs
-        highest'    = head $ tail xs
-        bcount      = xs !! 2
-        blocked'    = nub $ take bcount $ drop (2 + 1) xs
-        vcount      = xs !! (2 + 1 + bcount)
-        viewables'  = take vcount $ drop (2 + 1 + bcount + 1) xs
-    in Input { lowest = lowest'
-             , highest = highest'
-             , blocked = blocked'
-             , viewables = viewables'
-             }
+parse :: String -> Input
+parse str = let ys :: [Int] = read <$> Data.List.lines str in parse' ys
+  where parse' :: [Int] -> Input
+        parse' xs
+          | length xs < 4 = error "Input file must have >= 4 lines for parsing."
+          | any (< 0) xs  = error "Input data must all be integers >= 0."
+          | otherwise =
+            let lowest'     = head xs
+                highest'    = head $ tail xs
+                bcount      = xs !! 2
+                blocked'    = nub $ take bcount $ drop (2 + 1) xs
+                vcount      = xs !! (2 + 1 + bcount)
+                viewables'  = take vcount $ drop (2 + 1 + bcount + 1) xs
+            in Input { lowest = lowest'
+                     , highest = highest'
+                     , blocked = blocked'
+                     , viewables = viewables'
+                     }
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 main :: IO ()
 main = do
-  let inputFile = "./test/game-of-clicks-input.txt"
-  input :: [Int] <- fmap read . Data.List.lines <$> readFile inputFile
-  let pInput :: Input = parse input
-      minClicks :: Clicks = runReader minimumClicks pInput
-  putStrLn $ "Game Of Clicks Input: " ++ show pInput
-  putStrLn $ "Minimum Clicks For Viewable Channels Navigation: " ++ show minClicks
+  -- foldM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b
+  putStrLn "+++ Game of Clicks -- Minimum Clicks For Viewable Channels Navigation."
+  (_, failCount) <- foldM runTest (0, 0) testCases
+  putStrLn ("+++ " ++ show failCount ++ " TEST FAILURES")
+  where runTest :: (Int, Int) -> (FilePath, Int) -> IO (Int, Int)
+        runTest (pCount, fCount) (inputFile, expected) = do
+          pInput <- parse <$> readFile inputFile
+          let actual :: Clicks = runReader minimumClicks pInput
+          putStrLn $ formatTestCase inputFile pInput actual expected
+          case () of
+            _ | actual == expected -> return (pCount + 1, fCount)
+              | otherwise          -> return (pCount, fCount + 1)
+
+testCases :: [(FilePath, Int)]
+testCases = [ ("./tests/inputs/normal.txt", 8)
+            ,
+              ("./tests/inputs/zero-viewables.txt", 0)
+            ,
+              ("./tests/inputs/zero-blocked.txt", 8)
+            ,
+              ("./tests/inputs/high-low-blocked-with-looping.txt", 10)
+            ,
+              ("./tests/inputs/same-high-low-blocked.txt", 0)
+            ,
+              ("./tests/inputs/same-high-low-viewable.txt", 1)
+            ,
+              ("./tests/inputs/blocked-within.txt", 8)
+            ]
+
+formatTestCase :: FilePath -> Input -> Int -> Int -> String
+formatTestCase testFile input actual expected =
+    let status  = if actual == expected then "PASS" else "FAIL"
+    in "  ++  " ++ "Test File:  '"  ++ testFile ++ "'\n"     ++
+       "      " ++ "Input:       "  ++ show input ++ "\n"    ++
+       "      " ++ "Actual:      "  ++ show actual ++ "\n"   ++
+       "      " ++ "Expected:    "  ++ show expected ++ "\n" ++
+       "      " ++ "Status:      "  ++ status
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
