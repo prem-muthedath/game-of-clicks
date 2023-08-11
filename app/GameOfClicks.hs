@@ -48,28 +48,33 @@ upDownClicks :: Channel -> Channel -> ClicksReader Clicks
 upDownClicks from to = do
   input <- ask
   if all (`notElem` blocked input) [from, to]
-    then do up    <- upNavigationChannels
-            down  <- downNavigationChannels
-            minimum <$> mapM totalClicks [up, down]
+    then do up    <- upNavigationClicks
+            min up <$> downNavigationClicks
     else error $ show [from, to] ++ " has blocked channels"
-  where upNavigationChannels :: ClicksReader [Channel]
-        upNavigationChannels = do
+  where upNavigationClicks :: ClicksReader Clicks
+        upNavigationClicks = do
           vHigh <- viewableHigh
           vLow  <- viewableLow
           case () of
-            _ | from == vHigh -> return [vLow .. to]
-              | from < to -> return [from + 1 .. to]
-              | from > to -> return $ [from + 1 .. vHigh] ++ [vLow .. to]
-              | otherwise -> return []
-        downNavigationChannels :: ClicksReader [Channel]
-        downNavigationChannels = do
+            _ | from == vHigh -> totalClicks [vLow .. to]
+              | from < to -> totalClicks [from + 1 .. to]
+              | from > to -> do
+                  clks1 <- totalClicks [from + 1 .. vHigh]
+                  clks2 <- totalClicks [vLow .. to]
+                  return $ clks1 + clks2
+              | otherwise -> return 0
+        downNavigationClicks :: ClicksReader Clicks
+        downNavigationClicks = do
           vHigh <- viewableHigh
           vLow  <- viewableLow
           case () of
-            _ | from == vLow -> return [vHigh, vHigh - 1 .. to]
-              | from < to -> return $ [from-1, from-2 .. vLow] ++ [vHigh, vHigh-1 .. to]
-              | from > to -> return [from-1, from-2 .. to]
-              | otherwise -> return []
+            _ | from == vLow -> totalClicks [vHigh, vHigh - 1 .. to]
+              | from < to -> do
+                  clks1 <- totalClicks [from-1, from-2 .. vLow]
+                  clks2 <- totalClicks [vHigh, vHigh-1 .. to]
+                  return $ clks1 + clks2
+              | from > to -> totalClicks [from-1, from-2 .. to]
+              | otherwise -> return 0
         totalClicks :: [Channel] -> ClicksReader Clicks
         totalClicks chs = do
           input <- ask
@@ -145,7 +150,7 @@ minimumClicks = do
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- | Parse input data to create an `Input` record.
 -- See ./docs/problem-statement.txt to learn about input format.
--- see ./test/game-of-clicks-input.txt for a sample input.
+-- see ./tests/inputs/normal.txt for a sample input.
 parse :: String -> Input
 parse str = let ys :: [Int] = read <$> Data.List.lines str in parse' ys
   where parse' :: [Int] -> Input
