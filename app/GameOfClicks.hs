@@ -13,6 +13,10 @@ module Main where
 
 import Control.Monad.Reader (Reader, runReader, ask, asks, forM, foldM)
 import Data.List (lines, nub)
+import Text.Read (readMaybe)
+
+import System.Directory (doesFileExist)
+import System.FilePath (takeExtension)
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- First, define some type synonyms.
@@ -150,25 +154,70 @@ minimumClicks = do
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- | Parse input data to create an `Input` record.
 -- See ./docs/problem-statement.txt to learn about input format.
--- see ./tests/inputs/normal.txt for a sample input.
-parse :: String -> Input
-parse str = let ys :: [Int] = read <$> Data.List.lines str in parse' ys
-  where parse' :: [Int] -> Input
-        parse' xs
-          | length xs < 4 = error "Input file must have >= 4 lines for parsing."
-          | any (< 0) xs  = error "Input data must all be integers >= 0."
+-- see ./tests/good-inputs/normal.txt for a sample input.
+parse :: FilePath -> IO (Either String Input)
+parse fp = do
+  lines' :: [String] <- Data.List.lines <$> readFile fp
+  -- sequence :: (Traversable t, Monad m) => t (m a) -> m (t a)
+  return $ parse' $ sequence $ readMaybe <$> lines'
+  where parse' :: Maybe [Int] -> Either String Input
+        parse' (Just xs)
+          | length xs < 4 = Left "Input file must have 4 or more lines."
+          | any (< 0) xs  = Left "Input data must all be integers >= 0."
           | otherwise =
             let lowest'     = head xs
                 highest'    = head $ tail xs
                 bcount      = xs !! 2
                 blocked'    = nub $ take bcount $ drop (2 + 1) xs
-                vcount      = xs !! (2 + 1 + bcount)
+                vcount      = let index = (2 + 1 + bcount)
+                              in if length xs > index then xs !! index else -1
                 viewables'  = take vcount $ drop (2 + 1 + bcount + 1) xs
-            in Input { lowest = lowest'
-                     , highest = highest'
-                     , blocked = blocked'
-                     , viewables = viewables'
-                     }
+            in if bcount /= length blocked'
+                  then Left "Specified blocked count /= # of blocked channels."
+               else if vcount < 0
+                  then Left "No count of viewables found."
+               else if vcount /= length viewables'
+                  then Left "Specified viewables count /= # of viewable channels."
+               else validate Input { lowest = lowest'
+                                   , highest = highest'
+                                   , blocked = blocked'
+                                   , viewables = viewables'
+                                   }
+        parse' Nothing = Left "Input file must contain only integers."
+
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+validate :: Input -> Either String Input
+validate input
+  | any (<= 0) [lowest input, highest input] =
+    Left "Lowest & highest channels must be > 0."
+  | lowest input > highest input =
+    Left "Lowest channel must <= highest channel."
+  | any (`notElem` crange) $ blocked input =
+    Left "Blocked channels must be between lowest and highest, inclusive."
+  | any (`notElem` crange) $ viewables input =
+    Left "Viewable channels must be between lowest and highest, inclusive."
+  | any (`elem` viewables input) $ blocked input =
+    Left "Viewable channels can not be in the blocked channels list."
+  | otherwise = Right input
+  where crange = [lowest input .. highest input]
+
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+type ParseError = String
+type ParsedInput = String
+minimumClicksIO :: FilePath -> IO (Either ParseError (ParsedInput, Clicks))
+minimumClicksIO fp = do
+    status <- isValidFilePath
+    if status then do
+        result <- parse fp
+        case result of
+          Right pInput -> return $ Right (show pInput, runReader minimumClicks pInput)
+          Left err     -> return $ Left $ "File parse error: " ++ err
+    else return $ Left $ " file '" ++ fp ++ "' should exist and must have .txt extension."
+  where isValidFilePath :: IO Bool
+        isValidFilePath = do
+          exists <- doesFileExist fp
+          let hasExtension = takeExtension fp == ".txt"
+          return (exists && hasExtension)
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 main :: IO ()
@@ -177,38 +226,52 @@ main = do
   putStrLn "+++ Game of Clicks -- Minimum Clicks For Viewable Channels Navigation."
   (_, failCount) <- foldM runTest (0, 0) testCases
   putStrLn ("+++ " ++ show failCount ++ " TEST FAILURES")
-  where runTest :: (Int, Int) -> (FilePath, Int) -> IO (Int, Int)
-        runTest (pCount, fCount) (inputFile, expected) = do
-          pInput <- parse <$> readFile inputFile
-          let actual :: Clicks = runReader minimumClicks pInput
-          putStrLn $ formatTestCase inputFile pInput actual expected
+  where runTest :: (Int, Int) -> (FilePath, String) -> IO (Int, Int)
+        runTest (pCount, fCount) (fp, expected) = do
+          result <- minimumClicksIO fp
+          let (pInput, actual) = case result of
+                Right (x, y)  -> (x, show y)
+                Left err      -> ("", err)
+          putStrLn $ formatTestCase fp pInput actual expected
           case () of
             _ | actual == expected -> return (pCount + 1, fCount)
               | otherwise          -> return (pCount, fCount + 1)
 
-testCases :: [(FilePath, Int)]
-testCases = [ ("./tests/inputs/normal.txt", 8)
+testCases :: [(FilePath, String)]
+testCases = [ ("./tests/good-inputs/normal.txt", "8")
             ,
-              ("./tests/inputs/zero-viewables.txt", 0)
+              ("./tests/good-inputs/zero-viewables.txt", "0")
             ,
-              ("./tests/inputs/zero-blocked.txt", 8)
+              ("./tests/good-inputs/zero-blocked.txt", "8")
             ,
-              ("./tests/inputs/high-low-blocked-with-looping.txt", 10)
+              ("./tests/good-inputs/high-low-blocked-with-looping.txt", "10")
             ,
-              ("./tests/inputs/same-high-low-blocked.txt", 0)
+              ("./tests/good-inputs/same-high-low-blocked.txt", "0")
             ,
-              ("./tests/inputs/same-high-low-viewable.txt", 1)
+              ("./tests/good-inputs/same-high-low-viewable.txt", "1")
             ,
-              ("./tests/inputs/blocked-within.txt", 8)
+              ("./tests/good-inputs/blocked-within.txt", "8")
+            ,
+              ( "./tests/bad-inputs/missing-viewables.txt"
+              , "File parse error: Specified viewables count /= # of viewable channels."
+              )
+            ,
+              ( "./tests/bad-inputs/no-viewables-count.txt"
+              , "File parse error: No count of viewables found."
+              )
+            ,
+              ( "./tests/bad-inputs/empty-file.txt"
+              , "File parse error: Input file must have 4 or more lines."
+              )
             ]
 
-formatTestCase :: FilePath -> Input -> Int -> Int -> String
+formatTestCase :: FilePath -> String -> String -> String -> String
 formatTestCase testFile input actual expected =
     let status  = if actual == expected then "PASS" else "FAIL"
-    in "  ++  " ++ "Test File:  '"  ++ testFile ++ "'\n"     ++
-       "      " ++ "Input:       "  ++ show input ++ "\n"    ++
-       "      " ++ "Actual:      "  ++ show actual ++ "\n"   ++
-       "      " ++ "Expected:    "  ++ show expected ++ "\n" ++
+    in "  ++  " ++ "Test File:  '"  ++ testFile ++ "'\n"  ++
+       "      " ++ "Input:       "  ++ input ++ "\n"      ++
+       "      " ++ "Actual:      "  ++ actual ++ "\n"     ++
+       "      " ++ "Expected:    "  ++ expected ++ "\n"   ++
        "      " ++ "Status:      "  ++ status
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
