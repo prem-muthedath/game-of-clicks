@@ -17,7 +17,7 @@ name:               game-of-clicks
 version:            0.1.0.0
 
 -- A short (one-line) description of the package.
-synopsis:           Game of Clicks -- TV Channel Navigation Problem.
+synopsis:           Game Of Clicks: TV Channel Navigation Problem.
 
 -- A longer description of the package.
 -- description:
@@ -43,30 +43,34 @@ maintainer:
 
 -- Extra files to be distributed with the package, such as examples or a README.
 extra-source-files:
-    CHANGELOG.md
-    cabal.project.freeze
-    docs/problem-statement.txt
-    tests/good-inputs/normal.txt
-    tests/good-inputs/zero-blocked.txt
-    tests/good-inputs/zero-viewables.txt
-    tests/good-inputs/same-high-low-blocked.txt
-    tests/good-inputs/same-high-low-viewable.txt
-    tests/good-inputs/high-low-blocked-with-looping.txt
-    tests/good-inputs/blocked-within.txt
-    tests/bad-inputs/empty-file.txt
-    tests/bad-inputs/missing-viewables.txt
-    tests/bad-inputs/no-viewables-count.txt
+  CHANGELOG.md
+  cabal.project.freeze
+  docs/problem-statement.txt
+  tests/good-file-inputs/normal.txt
+  tests/good-file-inputs/zero-blocked.txt
+  tests/good-file-inputs/zero-viewables.txt
+  tests/good-file-inputs/same-high-low-blocked.txt
+  tests/good-file-inputs/same-high-low-viewable.txt
+  tests/good-file-inputs/high-low-blocked-with-looping.txt
+  tests/good-file-inputs/blocked-within.txt
+  tests/bad-file-inputs/empty-file.txt
+  tests/bad-file-inputs/missing-viewables.txt
+  tests/bad-file-inputs/no-viewables-count.txt
+  tests/bad-file-inputs/non-text-file.xml
 
-executable game-of-clicks
-    -- .hs or .lhs file containing the Main module.
-    main-is:  GameOfClicks.hs
+library
+    -- Modules exported by the library.
+    exposed-modules:  GameOfClicks
 
-    -- Modules included in this executable, other than Main.
-    -- other-modules:
+    -- Modules included in this library but not exported.
+    other-modules:
+      Game.Core
+      Game.Types
+      Game.IO
+      Game.Common
 
     -- LANGUAGE extensions used by modules in this package.
-    other-extensions:
-      ScopedTypeVariables
+    other-extensions: ScopedTypeVariables
 
     -- Other library packages from which modules are imported.
     build-depends:
@@ -76,10 +80,63 @@ executable game-of-clicks
       , filepath ==1.4.2.1
 
     -- Directories containing source files.
-    hs-source-dirs: app
+    hs-source-dirs:   src
 
     -- Base language which the package is written in.
     default-language: Haskell2010
 
-    -- GHC options.
+   -- GHC options.
+    ghc-options:  -O2 -fforce-recomp -Wall -Werror
+
+executable game-of-clicks-app
+    -- .hs or .lhs file containing the Main module.
+    main-is:  Main.hs
+
+    -- Modules included in this executable, other than Main.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    other-extensions: ScopedTypeVariables
+
+    -- Other library packages from which modules are imported.
+    build-depends:
+        base ==4.14.1.0,
+        game-of-clicks
+
+    -- Directories containing source files.
+    hs-source-dirs:   app
+
+    -- Base language which the package is written in.
+    default-language: Haskell2010
+
+   -- GHC options.
+    ghc-options:  -O2 -fforce-recomp -Wall -Werror
+
+test-suite game-of-clicks-tests
+    -- Base language which the package is written in.
+    default-language: Haskell2010
+
+    -- LANGUAGE extensions used by modules in this package.
+    other-extensions: ScopedTypeVariables
+
+    -- The interface type and version of the test suite.
+    type:             exitcode-stdio-1.0
+
+    -- Directories containing source files.
+    hs-source-dirs:   tests
+
+    -- The entrypoint to the test suite.
+    main-is:          Main.hs
+
+    -- Modules included in this executable, other than Main.
+    other-modules:
+      Tests
+      Types
+
+    -- Test dependencies.
+    build-depends:
+        base ==4.14.1.0
+      , game-of-clicks
+
+   -- GHC options.
     ghc-options:  -O2 -fforce-recomp -Wall -Werror
