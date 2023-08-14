@@ -1,7 +1,12 @@
+-- | Contains all tests.
+-- Author: Prem Muthedath
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 module Tests where
 
 import Types (Test)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- | Tests for `minimum clicks` computation.
+-- See ./docs/problem-statement.txt to learn about Game-Of-Clicks & file format.
 clicksTests :: [Test]
 clicksTests =
   [ ("./tests/good-file-inputs/normal.txt", "8")
@@ -44,6 +49,8 @@ clicksTests =
     )
   ]
 
+-- | Tests to check if input file parse is done as expected.
+-- See ./docs/problem-statement.txt to learn about Game-Of-Clicks & file format.
 fileParseTests :: [Test]
 fileParseTests =
   [ ("./tests/good-file-inputs/normal.txt"

@@ -1,7 +1,12 @@
+-- | Contains common code used by other modules.
+-- Author: Prem Muthedath
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 module Game.Common where
 
 import Game.Types (Input (..))
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- | Validates an `Input` record.
+-- See ./docs/problem-statement.txt to learn about validation rules.
 validate :: Input -> Either String Input
 validate input
   | any (<= 0) [lowest input, highest input] =

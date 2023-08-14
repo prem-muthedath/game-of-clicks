@@ -1,12 +1,13 @@
 {-# LANGUAGE CPP #-}
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- Game Of Clicks (R->Hard)
--- thoughtworks interview problem
--- https://prepinsta.com/thoughtworks-coding-questions/
--- see also ./docs/problem-statement.txt
+-- | Game Of Clicks (R->Hard)
+--
+-- To learn about the game, see:
+--  1. ./docs/problem-statement.txt
+--  2. https://prepinsta.com/thoughtworks-coding-questions/
 --
 -- Haskell Solution.
--- author: Prem Muthedath, AUG 2023.
+-- Author: Prem Muthedath, AUG 2023.
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- REF on CPP directive:
 --  1. https://guide.aelve.com/haskell/cpp-vww0qd72 (CPP overview)

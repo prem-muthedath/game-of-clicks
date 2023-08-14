@@ -1,13 +1,15 @@
 {-# LANGUAGE ScopedTypeVariables #-}
---
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- Game Of Clicks (R->Hard)
--- thoughtworks interview problem
--- https://prepinsta.com/thoughtworks-coding-questions/
--- see also ./docs/problem-statement.txt
+-- Game-Of-Clicks (R->Hard) core module.
+-- Handles all logic to compute minimum clicks needed to navigate a sequence of 
+-- viewable channels.
+--
+-- To learn about the game, see:
+--  1. ./docs/problem-statement.txt
+--  2. https://prepinsta.com/thoughtworks-coding-questions/
 --
 -- Haskell Solution.
--- author: Prem Muthedath, AUG 2023.
+-- Author: Prem Muthedath, AUG 2023.
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 module Game.Core where
 

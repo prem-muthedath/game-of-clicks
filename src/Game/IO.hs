@@ -1,5 +1,12 @@
 {-# LANGUAGE ScopedTypeVariables #-}
-
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- | IO API for computing minimum clicks for viewable channels listed in a file.
+--
+-- See ./docs/problem-statement.txt to learn about file input format.
+-- See ./tests/good-file-inputs/normal.txt for a sample file input.
+--
+-- Author: Prem Muthedath
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 module Game.IO (minimumClicksIO, parse) where
 
 import Text.Read (readMaybe)
@@ -13,6 +20,9 @@ import Game.Types (Clicks, FileParseError (..), Input(..))
 import Game.Core (minimumClicks)
 import Game.Common (validate)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- | Minimum clicks for navigating viewable channels listed in the input file.
+-- See ./docs/problem-statement.txt to learn about file input format.
+-- See ./tests/good-file-inputs/normal.txt for a sample file input.
 minimumClicksIO :: FilePath -> IO (Either FileParseError Clicks)
 minimumClicksIO fp = do
     status <- isValidFilePath
@@ -29,9 +39,9 @@ minimumClicksIO fp = do
           return (exists && hasExtension)
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- | Parse input data to create an `Input` record.
--- See ./docs/problem-statement.txt to learn about input format.
--- see ./tests/good-inputs/normal.txt for a sample input.
+-- | Parse input data file to create an `Input` record.
+-- See ./docs/problem-statement.txt to learn about file input format.
+-- See ./tests/good-file-inputs/normal.txt for a sample file input.
 parse :: FilePath -> IO (Either String Input)
 parse fp = do
   lines' :: [String] <- Data.List.lines <$> readFile fp
