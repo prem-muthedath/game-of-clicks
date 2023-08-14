@@ -93,8 +93,8 @@ tested-with: GHC == 8.10.4
 --  7. https://tinyurl.com/2s4h9vth (cs.auckland.nz, #if, #ifdef, #endif)
 Flag Testing
   Description:   Turn on testing
-  Default:       False
-  Manual:        True
+  Default:       True
+  Manual:        False
 
 library
     -- Modules exported by the library.

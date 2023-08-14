@@ -18,6 +18,11 @@ clicksTests =
   ,
     ("./tests/good-file-inputs/blocked-within.txt", "8")
   ,
+    ( "./tests/bad-file-inputs/missing-blocked.txt"
+    , "Parse failure in file './tests/bad-file-inputs/missing-blocked.txt':\
+        \ Specified blocked count /= # of blocked channels."
+    )
+  ,
     ( "./tests/bad-file-inputs/missing-viewables.txt"
     , "Parse failure in file './tests/bad-file-inputs/missing-viewables.txt':\
         \ Specified viewables count /= # of viewable channels."
@@ -73,6 +78,14 @@ fileParseTests =
     ("./tests/good-file-inputs/blocked-within.txt"
     , "Input {lowest = 1, highest = 20, blocked = [13,14,16],\
       \ viewables = [15,12,15,17,12,8]}"
+    )
+  ,
+    ("./tests/bad-file-inputs/blocked-viewables.txt"
+    , "\"Viewable channels can not be in the blocked channels list.\""
+    )
+  ,
+    ("./tests/bad-file-inputs/zero-channel-numbers.txt"
+    , "\"Lowest & highest channels must be > 0.\""
     )
   ]
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
