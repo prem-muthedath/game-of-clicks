@@ -12,7 +12,7 @@ main = do
   -- foldM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b
   putStrLn " +++ Tests For Minimum Clicks For Viewable Channels Navigation."
   (_, failCount) <- foldM (runTest minimumClicksIO) (0, 0) clicksTests
-  putStrLn " +++ Tests For Successful Input File Parse."
+  putStrLn " +++ Tests For Input File Parse."
   (_, failCount1) <- foldM (runTest parse)  (0, failCount) fileParseTests
   putStrLn ("+++ " ++ show failCount1 ++ " TEST FAILURES")
 
