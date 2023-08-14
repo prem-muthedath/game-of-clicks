@@ -40,8 +40,8 @@ upDownClicks from to = do
     min up <$> downNavigationClicks
   where upNavigationClicks :: ClicksReader Clicks
         upNavigationClicks = do
-          vHigh <- viewableHigh
           vLow  <- viewableLow
+          vHigh <- viewableHigh
           case () of
             _ | from == vHigh -> totalClicks [vLow .. to]
               | from < to -> totalClicks [from + 1 .. to]
@@ -52,8 +52,8 @@ upDownClicks from to = do
               | otherwise -> return 0
         downNavigationClicks :: ClicksReader Clicks
         downNavigationClicks = do
-          vHigh <- viewableHigh
           vLow  <- viewableLow
+          vHigh <- viewableHigh
           case () of
             _ | from == vLow -> totalClicks [vHigh, vHigh - 1 .. to]
               | from < to -> do
