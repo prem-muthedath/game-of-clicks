@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Game.IO where
+module Game.IO (minimumClicksIO, parse) where
 
 import Text.Read (readMaybe)
 import Data.List (lines, nub)

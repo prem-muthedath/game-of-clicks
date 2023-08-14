@@ -1,33 +1,37 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
 module Main (main) where
 
 import Control.Monad (foldM)
 
-import GameOfClicks (minimumClicksIO, FileParseError, Clicks)
+import GameOfClicks (minimumClicksIO, parse)
 import Types (Test, Actual, Expected, Status)
-import Tests (tests)
+import Tests (clicksTests, fileParseTests)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 main :: IO ()
 main = do
-  putStrLn "+++ Game of Clicks -- Minimum Clicks For Viewable Channels Navigation."
+  putStrLn "+++ Game of Clicks -- Tests."
   -- foldM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b
-  (_, failCount) <- foldM runTest (0, 0) tests
-  putStrLn ("+++ " ++ show failCount ++ " TEST FAILURES")
+  putStrLn " +++ Tests For Minimum Clicks For Viewable Channels Navigation."
+  (_, failCount) <- foldM (runTest minimumClicksIO) (0, 0) clicksTests
+  putStrLn " +++ Tests For Successful Input File Parse."
+  (_, failCount1) <- foldM (runTest parse)  (0, failCount) fileParseTests
+  putStrLn ("+++ " ++ show failCount1 ++ " TEST FAILURES")
 
-runTest :: (Int, Int) -> Test -> IO (Int, Int)
-runTest (pCount, fCount) (filePath, expected) = do
-  result :: Either FileParseError Clicks <- minimumClicksIO filePath
+runTest :: (Show a, Show b)
+        => (FilePath -> IO (Either a b))
+        -> (Int, Int) -> Test
+        -> IO (Int, Int)
+runTest f (pCount, fCount) (filePath, expected) = do
+  result <- f filePath
   let actual = case result of
         Right x   -> show x
         Left err  -> show err
-  putStrLn $ formatTestCase filePath actual expected
+  putStrLn $ formatTestResult filePath actual expected
   case () of
     _ | actual == expected -> return (pCount + 1, fCount)
       | otherwise          -> return (pCount, fCount + 1)
 
-formatTestCase :: FilePath -> Actual -> Expected -> Status
-formatTestCase testFile actual expected =
+formatTestResult :: FilePath -> Actual -> Expected -> Status
+formatTestResult testFile actual expected =
     let status = if actual == expected then "PASS" else "FAIL"
     in "  ++  " ++ "Test File:  '"  ++ testFile ++ "'\n"  ++
        "      " ++ "Actual:      "  ++ actual ++ "\n"     ++

@@ -58,6 +58,44 @@ extra-source-files:
   tests/bad-file-inputs/no-viewables-count.txt
   tests/bad-file-inputs/non-text-file.xml
 
+-- compiler version
+tested-with: GHC == 8.10.4
+
+-- Define and initialize a `Testing` flag for CPP usage.
+-- We do this here because using CPP directive, we can test internal functions 
+-- that are hidden from external users of this package. so how does this work?
+--    1. Well, we first define a flag `Testing`;
+--    2. By default, `Testing` is set to `False`;
+--    3. You can turn `Testing` to `True` at the commandline by:
+--
+--       `cabal v2-run -f testing :unit-conversion-test`
+--
+--    3. If you set `Testing` to `True`, as shown in (3), then the corresponding 
+--       `CPP` option `TESTING` is then set as "defined" in the `if
+--       flag(Testing) cpp-options: -DTESTING` code;
+--
+--    4. Once `TESTING` is defined, in module export, functions exported within 
+--       the `#ifdef TESTING ... #endif` block can be accessed for testing;
+--    5. `Testing` is `false` by default, but you can also set it to `False` at 
+--       the commandline by:
+--
+--       `cabal v2-run -f -testing :unit-conversion-test`
+--
+--    6. If `Testing = False`, then `TESTING` is undefined, so functions within 
+--       `#ifdef TESTING ... #endif` block in module export will be hidden.
+-- REF:
+--  1. https://tinyurl.com/4ajtp3wn (cabal 3.40 docs on flags & CPP)
+--  2. https://guide.aelve.com/haskell/cpp-vww0qd72#item-oh9ytz0p (cabal CPP)
+--  3. https://guide.aelve.com/haskell/cpp-vww0qd72 (CPP overview)
+--  4. haskell-chat--cabal-cpp-flags-setup.txt (meaning of `-DTESTING`)
+--  5. https://tinyurl.com/hr2x3n8r (/u/ ralph, so) (CPP in module export)
+--  6. https://tinyurl.com/33wmdvzd (/u/ willen van onsem, so) (CPP indentation)
+--  7. https://tinyurl.com/2s4h9vth (cs.auckland.nz, #if, #ifdef, #endif)
+Flag Testing
+  Description:   Turn on testing
+  Default:       False
+  Manual:        True
+
 library
     -- Modules exported by the library.
     exposed-modules:  GameOfClicks
@@ -88,6 +126,18 @@ library
    -- GHC options.
     ghc-options:  -O2 -fforce-recomp -Wall -Werror
 
+    -- NOTE:
+    -- 1. `If` block below is NECESSARY and does the following: if `Testing` is 
+    --    `True`, then it "defines" the CPP option `TESTING`. so that code that 
+    --    is conditionally dependent on `TESTING` will be executed. for us, this 
+    --    happens in module export, where `#ifdef TESTING ...  #endif` will 
+    --    execute code within the block, exporting functions in the block.
+    -- 2. `Testing` is in cabal land; `TESTING` is CPP: `Testing` /= `TESTING`.
+    -- 3. `-D` is a CPP option where `D` stands for `define`.
+    -- 4. See haskell-chat--cabal-cpp-flags-setup.txt (meaning of `-DTESTING`)
+    if flag(Testing)
+      cpp-options: -DTESTING
+
 executable game-of-clicks-app
     -- .hs or .lhs file containing the Main module.
     main-is:  Main.hs
@@ -117,7 +167,7 @@ test-suite game-of-clicks-tests
     default-language: Haskell2010
 
     -- LANGUAGE extensions used by modules in this package.
-    other-extensions: ScopedTypeVariables
+    -- other-extensions:
 
     -- The interface type and version of the test suite.
     type:             exitcode-stdio-1.0
