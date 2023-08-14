@@ -36,11 +36,8 @@ runClicksReader = runReader
 -- | Mimimum clicks to move from one channel to another using up-down keys.
 upDownClicks :: Channel -> Channel -> ClicksReader Clicks
 upDownClicks from to = do
-  input <- ask
-  if all (`notElem` blocked input) [from, to]
-    then do up    <- upNavigationClicks
-            min up <$> downNavigationClicks
-    else error $ show [from, to] ++ " has blocked channels"
+    up    <- upNavigationClicks
+    min up <$> downNavigationClicks
   where upNavigationClicks :: ClicksReader Clicks
         upNavigationClicks = do
           vHigh <- viewableHigh
