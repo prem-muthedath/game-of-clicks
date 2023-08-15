@@ -29,10 +29,10 @@ main = do
 
 -- | Run a `FileTest`, print the result, and report back the pass-fail count.
 runFileTest :: (Show a, Show b)
-        => (FilePath -> IO (Either a b))
-        -> (Int, Int)
-        -> FileTest
-        -> IO (Int, Int)
+            => (FilePath -> IO (Either a b))
+            -> (Int, Int)
+            -> FileTest
+            -> IO (Int, Int)
 runFileTest f (pCount, fCount) (filePath, expected) = do
   result <- f filePath
   let actual = case result of
