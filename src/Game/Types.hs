@@ -7,7 +7,9 @@ import Control.Monad.Reader (Reader)
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- First, define some type synonyms.
 -- See ./docs/problem-statement.txt to learn about Game-Of-Clicks terminology.
-type Clicks = Int; type Channel = Int
+type Clicks = Int; type Channel = Int   -- TV Channel
+type Lowest = Channel; type Highest = Channel
+type Blocked = Channel; type Viewable = Channel
 
 -- | Define file parse error and its accessors.
 data FileParseError = FileParseError FilePath String deriving Eq

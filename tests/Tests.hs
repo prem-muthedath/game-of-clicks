@@ -3,11 +3,12 @@
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 module Tests where
 
-import Types (Test)
+import Types (FileTest, InputTest)
+import GameOfClicks (Input (..))
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- | Tests for `minimum clicks` computation.
 -- See ./docs/problem-statement.txt to learn about Game-Of-Clicks & file format.
-clicksTests :: [Test]
+clicksTests :: [FileTest]
 clicksTests =
   [ ("./tests/good-file-inputs/normal.txt", "8")
   ,
@@ -51,7 +52,7 @@ clicksTests =
 
 -- | Tests to check if input file parse is done as expected.
 -- See ./docs/problem-statement.txt to learn about Game-Of-Clicks & file format.
-fileParseTests :: [Test]
+fileParseTests :: [FileTest]
 fileParseTests =
   [ ("./tests/good-file-inputs/normal.txt"
     , "Input {lowest = 1, highest = 20, blocked = [18,19],\
@@ -93,6 +94,16 @@ fileParseTests =
   ,
     ("./tests/bad-file-inputs/zero-channel-numbers.txt"
     , "\"Lowest & highest channels must be > 0.\""
+    )
+  ]
+
+inputTests :: [InputTest]
+inputTests =
+  [ ( Input 1 20 [18, 19] [15, 14, 17, 11, 17]
+    , "8"
+    )
+  , ( Input 1 20 [18, 200] [3, 7]
+    , "Blocked channels must be between lowest and highest, inclusive."
     )
   ]
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

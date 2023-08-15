@@ -2,6 +2,10 @@
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- | Game Of Clicks (R->Hard)
 --
+-- Briefly, in this game, we aim to find the minimum number of clicks to 
+-- navigate a sequence of viewable TV channels, given a channel range and other 
+-- constraints.
+--
 -- To learn about the game, see:
 --  1. ./docs/problem-statement.txt
 --  2. https://prepinsta.com/thoughtworks-coding-questions/
@@ -18,8 +22,15 @@ module GameOfClicks
   ( minimumClicksIO
 #ifdef TESTING
   , parse
+  , Input (..)
 #endif
+  , minimumClicksFor
   , Clicks
+  , Channel
+  , Lowest
+  , Highest
+  , Blocked
+  , Viewable
   , FileParseError
   , errFilePath
   , errMessage
@@ -27,6 +38,18 @@ module GameOfClicks
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import Game.IO (minimumClicksIO, parse)
-import Game.Types (Clicks, FileParseError, errFilePath, errMessage)
+import Game.Core (minimumClicksFor)
+import Game.Types
+  ( Input (..)
+  , Clicks
+  , Channel
+  , Lowest
+  , Highest
+  , Blocked
+  , Viewable
+  , FileParseError
+  , errFilePath
+  , errMessage
+  )
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

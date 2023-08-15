@@ -2,7 +2,7 @@
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- Game-Of-Clicks (R->Hard) core module.
 -- Handles all logic to compute minimum clicks needed to navigate a sequence of 
--- viewable channels.
+-- viewable TV channels, given a channel range and other constraints.
 --
 -- To learn about the game, see:
 --  1. ./docs/problem-statement.txt
@@ -11,11 +11,21 @@
 -- Haskell Solution.
 -- Author: Prem Muthedath, AUG 2023.
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-module Game.Core where
+module Game.Core (minimumClicks, minimumClicksFor, runClicksReader) where
 
 import Control.Monad.Reader (runReader, ask, asks, forM)
 
-import Game.Types (ClicksReader, Input (..), Clicks, Channel)
+import Game.Common (validate)
+import Game.Types
+  ( ClicksReader
+  , Input (..)
+  , Clicks
+  , Channel
+  , Lowest
+  , Highest
+  , Blocked
+  , Viewable
+  )
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- | Covenience function that enables you to see output of functions in this 
 -- module that operate in the Reader monad. Because we do not have a `Show` 
@@ -112,7 +122,9 @@ clicksToGetStarted :: ClicksReader Clicks
 clicksToGetStarted = asks (keyPressClicks . head . viewables)
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- | Minimum # of clicks to navigate all the channels in the viewing sequence.
+-- | Minimum clicks to navigate the sequence of viewable TV channels specified 
+-- by the input encapsulated in the Reader monad.
+-- See ./docs/problem-statement.txt to learn about Game-Of-Clicks terminology.
 minimumClicks :: ClicksReader Clicks
 minimumClicks = do
   input <- ask
@@ -135,3 +147,17 @@ minimumClicks = do
           return (first:rest)
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- | Minimum clicks to navigate the sequence of viewable TV channels within the 
+-- given channel range and constraints.
+-- See ./docs/problem-statement.txt to learn about Game-Of-Clicks terminology.
+minimumClicksFor :: Lowest
+                 -> Highest
+                 -> [Blocked]
+                 -> [Viewable]
+                 -> Either String Clicks
+minimumClicksFor high low blkds vwbls = do
+  input <- validate $ Input high low blkds vwbls
+  return $ runReader minimumClicks input
+
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
