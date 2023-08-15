@@ -57,6 +57,8 @@ extra-source-files:
   tests/bad-file-inputs/missing-viewables.txt
   tests/bad-file-inputs/no-viewables-count.txt
   tests/bad-file-inputs/non-text-file.xml
+  tests/bad-file-inputs/negative-input.txt
+  tests/bad-file-inputs/non-integer-input.txt
 
 -- compiler version
 tested-with: GHC == 8.10.4

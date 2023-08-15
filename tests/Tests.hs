@@ -48,6 +48,16 @@ clicksTests =
     , "Parse failure in file './tests/bad-file-inputs/non-text-file.xml':\
         \ Missing or non '.txt' file."
     )
+  ,
+    ( "./tests/bad-file-inputs/non-integer-input.txt"
+    , "Parse failure in file './tests/bad-file-inputs/non-integer-input.txt':\
+        \ Input file must contain only integers."
+    )
+  ,
+    ( "./tests/bad-file-inputs/negative-input.txt"
+    , "Parse failure in file './tests/bad-file-inputs/negative-input.txt':\
+        \ Input data must all be integers >= 0."
+    )
   ]
 
 -- | Tests to check if input file parse is done as expected.
@@ -103,7 +113,13 @@ inputTests =
     , "8"
     )
   , ( Input 1 20 [18, 200] [3, 7]
-    , "Blocked channels must be between lowest and highest, inclusive."
+    , "Blocked channels must be between lowest and highest channels, inclusive."
+    )
+  , ( Input 11 10 [3, 5] [6, 7]
+    , "Lowest channel must be <= highest channel."
+    )
+  , ( Input 1 20 [18, 19] [15, 70]
+    , "Viewable channels must be between lowest and highest channels, inclusive."
     )
   ]
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
