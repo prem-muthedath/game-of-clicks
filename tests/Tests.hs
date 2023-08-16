@@ -12,17 +12,25 @@ clicksTests :: [FileTest]
 clicksTests =
   [ ("./tests/good-file-inputs/normal.txt", "8")
   ,
-    ("./tests/good-file-inputs/zero-viewables.txt", "0")
-  ,
     ("./tests/good-file-inputs/zero-blocked.txt", "8")
   ,
     ("./tests/good-file-inputs/high-low-blocked-with-looping.txt", "10")
   ,
-    ("./tests/good-file-inputs/same-high-low-blocked.txt", "0")
-  ,
     ("./tests/good-file-inputs/same-high-low-viewable.txt", "1")
   ,
     ("./tests/good-file-inputs/blocked-within.txt", "8")
+  ,
+    ("./tests/bad-file-inputs/zero-viewables.txt"
+    , "Parse failure in file './tests/bad-file-inputs/zero-viewables.txt':\
+        \ No viewable channels found.  \
+        \There should be at least 1 viewable channel."
+    )
+  ,
+    ("./tests/bad-file-inputs/same-high-low-blocked.txt"
+    , "Parse failure in file './tests/bad-file-inputs/same-high-low-blocked.txt':\
+        \ No viewable channels found.  \
+        \There should be at least 1 viewable channel."
+    )
   ,
     ( "./tests/bad-file-inputs/missing-blocked.txt"
     , "Parse failure in file './tests/bad-file-inputs/missing-blocked.txt':\
@@ -58,6 +66,16 @@ clicksTests =
     , "Parse failure in file './tests/bad-file-inputs/negative-input.txt':\
         \ Input data must all be integers >= 0."
     )
+  ,
+    ( "./tests/bad-file-inputs/low-above-upper-limit.txt"
+    , "Parse failure in file './tests/bad-file-inputs/low-above-upper-limit.txt':\
+        \ Lowest and highest channels must be <= 10000."
+    )
+  ,
+    ( "./tests/bad-file-inputs/high-above-upper-limit.txt"
+    , "Parse failure in file './tests/bad-file-inputs/high-above-upper-limit.txt':\
+        \ Lowest and highest channels must be <= 10000."
+    )
   ]
 
 -- | Tests to check if input file parse is done as expected.
@@ -67,12 +85,6 @@ fileParseTests =
   [ ("./tests/good-file-inputs/normal.txt"
     , "Input {lowest = 1, highest = 20, blocked = [18,19],\
         \ viewables = [15,14,17,11,17]}"
-    )
-  ,
-    ("./tests/good-file-inputs/zero-viewables.txt"
-    , "Input {lowest = 1, highest = 20,\
-        \ blocked = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],\
-        \ viewables = []}"
     )
   ,
     ("./tests/good-file-inputs/zero-blocked.txt"
@@ -85,10 +97,6 @@ fileParseTests =
       \ viewables = [2,19,18,3,14,19,2,19]}"
     )
   ,
-    ("./tests/good-file-inputs/same-high-low-blocked.txt"
-    , "Input {lowest = 1, highest = 1, blocked = [1], viewables = []}"
-    )
-  ,
     ("./tests/good-file-inputs/same-high-low-viewable.txt"
     , "Input {lowest = 1, highest = 1, blocked = [], viewables = [1]}"
     )
@@ -96,6 +104,14 @@ fileParseTests =
     ("./tests/good-file-inputs/blocked-within.txt"
     , "Input {lowest = 1, highest = 20, blocked = [13,14,16],\
       \ viewables = [15,12,15,17,12,8]}"
+    )
+  ,
+    ("./tests/bad-file-inputs/same-high-low-blocked.txt"
+    , "\"No viewable channels found.  There should be at least 1 viewable channel.\""
+    )
+  ,
+    ("./tests/bad-file-inputs/zero-viewables.txt"
+    , "\"No viewable channels found.  There should be at least 1 viewable channel.\""
     )
   ,
     ("./tests/bad-file-inputs/blocked-viewables.txt"
@@ -120,6 +136,18 @@ inputTests =
     )
   , ( Input 1 20 [18, 19] [15, 70]
     , "Viewable channels must be between lowest and highest channels, inclusive."
+    )
+  , ( Input 1 200 [18, 19] [20 .. 69]
+    , "51"
+    )
+  , ( Input 1 200 [18, 19] [20 .. 70]
+    , "There should be no more than 50 viewable channels."
+    )
+  , ( Input 9000 10000 [9500, 9600] [9100]
+    , "4"
+    )
+  , ( Input 9000 10001 [9500, 9600] [9100]
+    , "Lowest and highest channels must be <= 10000."
     )
   ]
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
