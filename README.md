@@ -5,7 +5,7 @@ of viewable TV channels, given a channel range and other constraints.
 
 To learn more about the game, see: ./docs/problem-statement.txt
 
-##### author: Prem Muthedath
+##### Author: Prem Muthedath
 
 ##### GHC version: 8.10.4, cabal 3.40
 
@@ -21,7 +21,7 @@ To learn more about the game, see: ./docs/problem-statement.txt
 
      You can then use the library in `GHCi` to compute the minumum clicks to 
      navigate a viewable sequence of TV channels.  For example, given an input 
-     file (NOTE: all input files should have '.txt' extension) having the game 
+     file (NOTE: all input files should have `.txt` extension) having the game 
      data, you can enter at the `GHCi` prompt the following command:
 
      ````
@@ -29,7 +29,7 @@ To learn more about the game, see: ./docs/problem-statement.txt
      ````
 
      Or you could use another function in the library that takes the game data 
-     as arguments (instead of an inpout file) to compute the minimum clicks.
+     as arguments (instead of an input file) to compute the minimum clicks.
 
      ````
      minimumClicksFor 1 20 [18, 19] [15, 14, 17,11, 17]
@@ -52,9 +52,9 @@ To learn more about the game, see: ./docs/problem-statement.txt
      2. main
      ````
 
-  5. If you wish to use the `app` on the unix commandline, you can do so in one 
+  5. If you wish to run the `app` on the unix commandline, you can do so in one 
      of the two following ways, as the example below that uses an input file (by 
-     the way, all input files should have '.txt' extension) shows (NOTE: If you 
+     the way, all input files should have `.txt` extension) shows (NOTE: If you 
      are in `GHCi`, first exit from there):
 
      ````
@@ -64,7 +64,7 @@ To learn more about the game, see: ./docs/problem-statement.txt
 
   6. If you would like to use the `app` in `GHCi` instead, you can do so by 
      first starting `GHCi` by loading the `app` and then running the `app`, as 
-     the example below that uses an input file (it has be a '.txt' file) shows:
+     the example below that uses an input file (it has be a `.txt` file) shows:
 
      ````
      1. cabal v2-repl :game-of-clicks-app
