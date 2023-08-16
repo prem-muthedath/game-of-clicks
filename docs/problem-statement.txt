@@ -1,9 +1,8 @@
--- thoughtworks interview problem
--- https://prepinsta.com/thoughtworks-coding-questions/
+*************************** Game Of Clicks *************************************
+REF: https://prepinsta.com/thoughtworks-coding-questions/
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Question 4: Game Of Clicks (R->Hard)
-Problem Statement:
 
+Problem Statement:
 Sahil watches TV all day and gets bored. He started playing this dumb game of 
 identifying minimum number of inputs needed to reach a channel. As his cousin, 
 you have to help him, but you live far from his house. So you decide to write a 
@@ -41,7 +40,7 @@ Input Format:
 5. Followed by the number of Channels to view V, and the next V lines contain 
    the actual channels to view.
 
-Constraints :
+Constraints:
 1. The lowest channel on the television will be greater than 0. and less than or 
    equal to 10,000.
 2. The highest channel on the television will be greater than or equal to the 
@@ -55,7 +54,7 @@ Constraints :
 5. All channels in this sequence are not in the blocked list and are between 
    lowest channel and highest channel. Inclusive.
 
-Sample Input 0:
+Sample Input:
 1
 20
 2
@@ -68,7 +67,7 @@ Sample Input 0:
 1T
 17
 
-Sample output 0:
-7
+Sample output:
+8
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

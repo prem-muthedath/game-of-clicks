@@ -1,6 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- | IO API for computing minimum clicks for viewable channels listed in a file.
+-- | IO API that takes a file input to compute the minimum clicks to navigate 
+-- viewable TV channels listed in the file.
 --
 -- See ./docs/problem-statement.txt to learn about file input format.
 -- See ./tests/good-file-inputs/normal.txt for a sample file input.

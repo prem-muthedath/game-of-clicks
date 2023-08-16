@@ -44,8 +44,6 @@ runFileTest f (pCount, fCount) (filePath, expected) = do
       | otherwise          -> return (pCount, fCount + 1)
 
 -- | Run an `InputTest`, print the result, and report back the pass-fail count.
--- We run just 1 canned test here, because this code being tested is merely a 
--- wrapper around the code already tested in file tests.
 runInputTest :: (Int, Int) -> InputTest -> IO (Int, Int)
 runInputTest (pCount, fCount) (input, expected) = do
   let actual = case minimumClicksFor low high blkd vwbls of
