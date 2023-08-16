@@ -19,37 +19,34 @@
 --  3. https://tinyurl.com/2s4h9vth (cs.auckland.nz, #if, #ifdef, #endif)
 --  4. https://tinyurl.com/33wmdvzd (/u/ willen van onsem, so) (CPP indentation)
 module GameOfClicks
-  ( minimumClicksIO
-#ifdef TESTING
-  , parse
-  , Input (..)
-#endif
+  (
+  -- * Core functions for minimum clicks computations
+    minimumClicksIO
   , minimumClicksFor
+#ifdef TESTING
+  -- ** Input file parse -- access restricted to internal library tests.
+  , parse
+#endif
+  -- * Types
   , Clicks
   , Channel
   , Lowest
   , Highest
   , Blocked
   , Viewable
+#ifdef TESTING
+  -- ** Input record -- access restricted to internal library tests
+  , Input (..)
+#endif
+  -- ** File parse error type and its accessors
   , FileParseError
   , errFilePath
   , errMessage
   ) where
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import Game.IO (minimumClicksIO, parse)
+import Game.IO
 import Game.Core (minimumClicksFor)
 import Game.Types
-  ( Input (..)
-  , Clicks
-  , Channel
-  , Lowest
-  , Highest
-  , Blocked
-  , Viewable
-  , FileParseError
-  , errFilePath
-  , errMessage
-  )
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

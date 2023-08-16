@@ -95,8 +95,8 @@ tested-with: GHC == 8.10.4
 --  7. https://tinyurl.com/2s4h9vth (cs.auckland.nz, #if, #ifdef, #endif)
 Flag Testing
   Description:   Turn on testing
-  Default:       True
-  Manual:        False
+  Default:       False
+  Manual:        True
 
 library
     -- Modules exported by the library.
@@ -110,7 +110,7 @@ library
       Game.Common
 
     -- LANGUAGE extensions used by modules in this package.
-    other-extensions: ScopedTypeVariables
+    other-extensions: ScopedTypeVariables, CPP
 
     -- Other library packages from which modules are imported.
     build-depends:
@@ -137,7 +137,7 @@ library
     -- 2. `Testing` is in cabal land; `TESTING` is CPP: `Testing` /= `TESTING`.
     -- 3. `-D` is a CPP option where `D` stands for `define`.
     -- 4. See haskell-chat--cabal-cpp-flags-setup.txt (meaning of `-DTESTING`)
-    if flag(Testing)
+    if flag (Testing)
       cpp-options: -DTESTING
 
 executable game-of-clicks-app
