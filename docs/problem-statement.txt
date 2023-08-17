@@ -32,12 +32,12 @@ Given a list of channels to view, the lowest channel, the highest channel, and a
 list of blocked channels, your program should return the minimum number of 
 clicks necessary to get through all the shows that Anirudh would like to match.
 
-Input Format:
-1. First line is the lowest Channel
-2. Second-line is the highest Channel
+Input File Format:
+1. First line is the lowest channel
+2. Second line is the highest channel
 3. Followed by a number of blocked channels B,
-4. and the next B lines contain the actual blocked channels.
-5. Followed by the number of Channels to view V, and the next V lines contain 
+4. And the next B lines contain the actual blocked channels.
+5. Followed by the number of channels to view V, and the next V lines contain 
    the actual channels to view.
 
 Constraints:
@@ -54,7 +54,7 @@ Constraints:
 5. All channels in this sequence are not in the blocked list and are between 
    lowest channel and highest channel. Inclusive.
 
-Sample Input:
+Sample File Input:
 1
 20
 2

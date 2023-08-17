@@ -48,17 +48,22 @@ extra-source-files:
   docs/problem-statement.txt
   tests/good-file-inputs/normal.txt
   tests/good-file-inputs/zero-blocked.txt
-  tests/good-file-inputs/zero-viewables.txt
-  tests/good-file-inputs/same-high-low-blocked.txt
   tests/good-file-inputs/same-high-low-viewable.txt
   tests/good-file-inputs/high-low-blocked-with-looping.txt
   tests/good-file-inputs/blocked-within.txt
+  tests/bad-file-inputs/zero-viewables.txt
+  tests/bad-file-inputs/same-high-low-blocked.txt
+  tests/bad-file-inputs/blocked-viewables.txt
+  tests/bad-file-inputs/zero-channel-numbers.txt
   tests/bad-file-inputs/empty-file.txt
   tests/bad-file-inputs/missing-viewables.txt
+  tests/bad-file-inputs/missing-blocked.txt
   tests/bad-file-inputs/no-viewables-count.txt
   tests/bad-file-inputs/non-text-file.xml
   tests/bad-file-inputs/negative-input.txt
   tests/bad-file-inputs/non-integer-input.txt
+  tests/bad-file-inputs/low-above-upper-limit.txt
+  tests/bad-file-inputs/high-above-upper-limit.txt
 
 -- compiler version
 tested-with: GHC == 8.10.4
