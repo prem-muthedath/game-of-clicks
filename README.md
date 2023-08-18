@@ -14,8 +14,8 @@ To learn more about the game, see: `./docs/problem-statement.txt`
      and remain there to execute any of the steps below.
 
   2. Some commands and library functions given below take a file as input.  
-     Please know that `game-of-clicks` only accepts text files with a `.txt` 
-     extension as input.  Also, all input files must be in the specified format.
+     `game-of-clicks` only accepts text files with a `.txt` extension as input.  
+     Also, all input files must be in the specified format.
 
      See `./docs/problem-statement.txt` to learn about input file format 
      specification and input data constraints.  See also 
