@@ -11,11 +11,11 @@ To learn more about the game, see: `./docs/problem-statement.txt`
 
 ##### Project journey
 How did the solution to the TV Channel navigation problem called the 
-`game-of-clicks` emerge?  Well, at first it looked more complex that it really 
+`game-of-clicks` emerge?  Well, at first it looked more complex than it really 
 is, and you thought dynamic programming is needed.  Then, on closer inspection, 
 you learned that the solution needs another, much simpler approach.  You then 
-coded the stuff in Haskell, using Reader monad, and it came out beautiful.  Now 
-how do you then turn this stuff into a cabal package with library, app, and 
+coded the stuff in Haskell, using the Reader monad, and it came out beautiful.  
+Now how do you then turn this stuff into a cabal package with library, app, and 
 tests?  Well, that required splitting up stuff into modules, defining types, 
 deciding what to expose and what not to expose to clients, coming up with test 
 data and edge cases, and conditional compilation using CPP.  Finally, you had to 
