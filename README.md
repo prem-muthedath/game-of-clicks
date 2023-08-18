@@ -9,6 +9,18 @@ To learn more about the game, see: `./docs/problem-statement.txt`
 
 ##### GHC version: 8.10.4, cabal 3.40
 
+#### project journey
+How did the solution to the TV Channel navigation problem called the 
+`game-of-clicks` emerge?  Well, at first it looked more complex that it really 
+is, and you thought dynamic programming is needed.  Then, on closer inspection, 
+you learned that the solution needs another, much simpler approach.  You then 
+coded the stuff in Haskell, using Reader monad, and it came out beautiful.  Now 
+how do you then turn this stuff into a cabal package with library, app, and 
+tests?  Well, that required splitting up stuff into modules, defining types, 
+deciding what to expose and what not to expose to clients, coming up with test 
+data and edge cases, and conditional compilation using CPP.  Finally, you had to 
+also roll out the documentation.  That's how the journey really unfolded.
+
 ##### How to use the library, the app, & run the tests:
   1. `cd` to `game-of-clicks`, the top directory containing this `README` file, 
      and remain there to execute any of the steps below.
