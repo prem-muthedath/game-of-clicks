@@ -9,7 +9,7 @@ To learn more about the game, see: `./docs/problem-statement.txt`
 
 ##### GHC version: 8.10.4, cabal 3.40
 
-#### project journey
+#### Project journey
 How did the solution to the TV Channel navigation problem called the 
 `game-of-clicks` emerge?  Well, at first it looked more complex that it really 
 is, and you thought dynamic programming is needed.  Then, on closer inspection, 
