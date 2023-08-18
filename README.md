@@ -3,7 +3,7 @@
 In this game, we aim to find the minimum number of clicks to navigate a sequence 
 of viewable TV channels, given a channel range and other constraints.
 
-To learn more about the game, see: ./docs/problem-statement.txt
+To learn more about the game, see: `./docs/problem-statement.txt`
 
 ##### Author: Prem Muthedath
 
@@ -14,8 +14,8 @@ To learn more about the game, see: ./docs/problem-statement.txt
      and remain there to execute any of the steps below.
 
   2. Some commands and library functions given below take a file as input.  
-     Please know that all input files in game-of-clicks must be text files with 
-     `.txt` extension.  Also, all input files must be in the specified format.
+     Please know that `game-of-clicks` only accepts text files with a `.txt` 
+     extension as input.  Also, all input files must be in the specified format.
 
      See `./docs/problem-statement.txt` to learn about input file format 
      specification and input data constraints.  See also 

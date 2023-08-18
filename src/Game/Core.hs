@@ -27,7 +27,7 @@ import Game.Types
   , Viewable
   )
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- | Covenience function that enables you to see output of functions in this 
+-- | Convenience function that enables you to see output of functions in this 
 -- module that operate in the Reader monad. Because we do not have a `Show` 
 -- instance for `ClicksReader a` defined (it is not easy to do!), it becomes 
 -- difficult to test/debug functions in this module in GHCi. But with this 

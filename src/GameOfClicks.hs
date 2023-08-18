@@ -46,7 +46,28 @@ module GameOfClicks
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import Game.IO
+  ( minimumClicksIO
+#ifdef TESTING
+  -- Input file parse -- access restricted to internal library tests.
+  , parse
+#endif
+  )
 import Game.Core (minimumClicksFor)
 import Game.Types
+  ( Clicks
+  , Channel
+  , Lowest
+  , Highest
+  , Blocked
+  , Viewable
+#ifdef TESTING
+  -- Input record -- access restricted to internal library tests
+  , Input (..)
+#endif
+  -- File parse error type and its accessors
+  , FileParseError
+  , errFilePath
+  , errMessage
+  )
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
