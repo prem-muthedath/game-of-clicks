@@ -15,7 +15,7 @@ How did the solution to the TV Channel navigation problem called the
 is, and you thought dynamic programming is needed.  Then, on closer inspection, 
 you learned that the solution needs another, much simpler approach.  You then 
 coded the stuff in Haskell, using the Reader monad, and it came out beautiful.  
-Now how do you then turn this stuff into a cabal package with library, app, and 
+How do you then turn this stuff into a cabal package with library, app, and 
 tests?  Well, that required splitting up stuff into modules, defining types, 
 deciding what to expose and what not to expose to clients, coming up with test 
 data and edge cases, and conditional compilation using CPP.  Finally, you had to 
