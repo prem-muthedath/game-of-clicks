@@ -123,29 +123,40 @@ fileParseTests =
     )
   ]
 
+-- | Tests for minimum clicks computation that takes non-file input.
+-- See ./docs/problem-statement.txt to learn about input data format & constraints.
 inputTests :: [InputTest]
 inputTests =
-  [ ( Input 1 20 [18, 19] [15, 14, 17, 11, 17]
+  [
+  -- Test case for "normal" or "good" input
+    ( Input 1 20 [18, 19] [15, 14, 17, 11, 17]
     , "8"
     )
+  -- Test case for "blocked" channels beyond allowed channel range
   , ( Input 1 20 [18, 200] [3, 7]
     , "Blocked channels must be between lowest and highest channels, inclusive."
     )
+  -- Test case for "lowest" channel > highest channel
   , ( Input 11 10 [3, 5] [6, 7]
     , "Lowest channel must be <= highest channel."
     )
+  -- Test case for "viewable" channels that are in blocked channel list
   , ( Input 1 20 [18, 19] [15, 70]
     , "Viewable channels must be between lowest and highest channels, inclusive."
     )
+  -- Test case for upper limit of 50 viewable channels
   , ( Input 1 200 [18, 19] [20 .. 69]
     , "51"
     )
+  -- Test case for viewable channels > 50 (the allowed upper limit)
   , ( Input 1 200 [18, 19] [20 .. 70]
     , "There should be no more than 50 viewable channels."
     )
+  -- Test case for channel # upper limit of 10000
   , ( Input 9000 10000 [9500, 9600] [9100]
     , "4"
     )
+  -- Test case for channel # > 10000 (the allowed upper limit)
   , ( Input 9000 10001 [9500, 9600] [9100]
     , "Lowest and highest channels must be <= 10000."
     )
