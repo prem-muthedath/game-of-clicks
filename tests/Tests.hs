@@ -140,7 +140,7 @@ inputTests =
   , ( Input 11 10 [3, 5] [6, 7]
     , "Lowest channel must be <= highest channel."
     )
-  -- Test case for "viewable" channels that are in blocked channel list
+  -- Test case for "viewable" channels beyond allowed channel range
   , ( Input 1 20 [18, 19] [15, 70]
     , "Viewable channels must be between lowest and highest channels, inclusive."
     )
